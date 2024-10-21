@@ -1,0 +1,163 @@
+﻿@model List<Crud.Models.Entities.Cliente>
+
+<h1>Clientes</h1>
+
+@(
+Html.DevExtreme().DataGrid<Crud.Models.Entities.Cliente>()
+    .RowAlternationEnabled(true)
+
+    .Scrolling(scroll => scroll
+        .Mode(GridScrollingMode.Infinite)
+        .ShowScrollbar(ShowScrollbarMode.Always)
+    )
+    .FilterRow(f => f.Visible(true))
+
+
+    .DataSource(ds => ds.Mvc()
+        .Controller("Cliente")
+        .LoadAction("GetCliente")
+        .InsertAction("PostCliente")
+        .UpdateAction("PutCliente")
+        .DeleteAction("DeleteCliente")
+        .Key("Id")
+    )
+    .RemoteOperations(true)
+    .Columns(columns => {
+
+        columns.AddFor(m => m.Id)
+            .AllowEditing(false);
+
+        columns.AddFor(m => m.Nome);
+
+        columns.AddFor(m => m.Cnpj);
+
+    })
+    .Editing(e => e
+        .Mode(GridEditMode.Row)
+        .AllowAdding(true)
+        .AllowUpdating(true)
+        .AllowDeleting(true)
+    )
+    .Summary(s => s
+        .TotalItems(totalItems => {
+            totalItems.AddFor(t => t.Id)
+                .SummaryType(SummaryType.Count);
+        })
+    )
+
+    .MasterDetail(md => {
+        md.Enabled(true);
+        md.Template(@<text>
+
+            @* DataGrid do Endereço Fiscal *@
+            <div class="master-detail-caption">Endereços Fiscais</div>
+            @(Html.DevExtreme().DataGrid<Crud.Models.Entities.EnderecoFiscal>()
+                .ColumnAutoWidth(true)
+                .ShowBorders(true)
+                .Columns(columns => {
+                    columns.AddFor(m => m.Id)
+                        .AllowEditing(false);
+                    columns.AddFor(m => m.RazaoSocial);
+                    columns.AddFor(m => m.Cep);
+                    columns.AddFor(m => m.Logradouro);
+                    columns.AddFor(m => m.Complemento);
+                    columns.AddFor(m => m.Bairro);
+                    columns.AddFor(m => m.Cidade);
+                    columns.AddFor(m => m.Estado);
+                })
+                .DataSource(ds => ds.Mvc()
+                    .Controller("Endereco")
+                    .LoadAction("GetEndereco")
+                    .InsertAction("PostEndereco")
+                    .UpdateAction("PutEndereco")
+                    .DeleteAction("DeleteEndereco")
+                    .LoadParams(new { id = new JS("data.Id"), tipo = 0 })
+                    .Key("Id")
+                )
+                .OnRowInserting("function(e) { e.data.ClienteId = data.Id; e.data.Tipo = 0; }")
+                .Editing(e => e
+                    .Mode(GridEditMode.Row)
+                    .AllowAdding(true)
+                    .AllowUpdating(true)
+                    .AllowDeleting(true)
+                )
+            )
+
+            @* DataGrid do Endereço de Cobranca *@
+            <div class="master-detail-caption">Endereços de Cobrança</div>
+            @(Html.DevExtreme().DataGrid<Crud.Models.Entities.EnderecoCobranca>()
+                .ColumnAutoWidth(true)
+                .ShowBorders(true)
+                .Columns(columns => {
+                    columns.AddFor(m => m.Id)
+                        .AllowEditing(false);
+
+                    columns.AddFor(m => m.NomePagador);
+                    columns.AddFor(m => m.Cep);
+                    columns.AddFor(m => m.Logradouro);
+                    columns.AddFor(m => m.Complemento);
+                    columns.AddFor(m => m.Bairro);
+                    columns.AddFor(m => m.Cidade);
+                    columns.AddFor(m => m.Estado);
+                })
+                .DataSource(ds => ds.Mvc()
+                    .Controller("Endereco")
+                    .LoadAction("GetEndereco")
+                    .InsertAction("PostEndereco")
+                    .UpdateAction("PutEndereco")
+                    .DeleteAction("DeleteEndereco")
+                    .LoadParams(new { id = new JS("data.Id"), tipo = 1 })
+                    .Key("Id")
+                )
+                .OnRowInserting("function(e) { e.data.ClienteId = data.Id; e.data.Tipo = 1; }")
+                .Editing(e => e
+                    .Mode(GridEditMode.Row)
+                    .AllowAdding(true)
+                    .AllowUpdating(true)
+                    .AllowDeleting(true)
+                )
+            )
+
+            @* DataGrid do Endereço de Entrega *@
+            <div class="master-detail-caption">Endereços de Entrega</div>
+            @(Html.DevExtreme().DataGrid<Crud.Models.Entities.EnderecoEntrega>()
+                .ColumnAutoWidth(true)
+                .ShowBorders(true)
+                .Columns(columns => {
+                    columns.AddFor(m => m.Id)
+                        .AllowEditing(false);
+
+                    columns.AddFor(m => m.NomeRecebedor);
+                    columns.AddFor(m => m.Cep);
+                    columns.AddFor(m => m.Logradouro);
+                    columns.AddFor(m => m.Complemento);
+                    columns.AddFor(m => m.Bairro);
+                    columns.AddFor(m => m.Cidade);
+                    columns.AddFor(m => m.Estado);
+                })
+                .DataSource(ds => ds.Mvc()
+                    .Controller("Endereco")
+                    .LoadAction("GetEndereco")
+                    .InsertAction("PostEndereco")
+                    .UpdateAction("PutEndereco")
+                    .DeleteAction("DeleteEndereco")
+                    .LoadParams(new { id = new JS("data.Id"), tipo = 2 })
+                    .Key("Id")
+                )
+                .OnRowInserting("function(e) { e.data.ClienteId = data.Id; e.data.Tipo = 2; }")
+                .Editing(e => e
+                    .Mode(GridEditMode.Row)
+                    .AllowAdding(true)
+                    .AllowUpdating(true)
+                    .AllowDeleting(true)
+                )
+            )
+        </text>);
+    })
+)
+
+<style>
+    .master-detail-caption {
+        margin-top: 2rem;
+    }
+</style>

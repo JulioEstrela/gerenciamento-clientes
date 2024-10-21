@@ -1,6 +1,12 @@
 # Gerenciamento de Clientes
 API CRUD de Clientes | ASP.NET MVC | C# | DevExpress | SQL Server | EntityFramework | Modelagem DDD
 
+## Imagens da Aplicação
+![image](https://github.com/user-attachments/assets/3479a5fa-6a25-4623-a517-1654e4efb310)
+
+![image](https://github.com/user-attachments/assets/a62a2923-849f-4721-b903-0cedf255a649)
+
+
 ## Dependências
 ```powershell
    [net8.0]: 

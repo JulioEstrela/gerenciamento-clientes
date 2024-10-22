@@ -17,6 +17,8 @@ API CRUD de Clientes | ASP.NET MVC | C# | DevExpress | SQL Server | EntityFramew
    > Microsoft.EntityFrameworkCore.SqlServer      8.0.10      8.0.10  
    > Microsoft.EntityFrameworkCore.Tools          8.0.10      8.0.10  
 ```
+Baixar versão de teste do DevExpress: https://www.devexpress.com/Products/Try/  
+(Unified Component Installer)
 
 ## Banco de Dados
 ### Modelagem UML

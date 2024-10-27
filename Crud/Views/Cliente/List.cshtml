@@ -65,6 +65,7 @@ Html.DevExtreme().DataGrid<Crud.Models.Entities.Cliente>()
                     columns.AddFor(m => m.Cidade);
                     columns.AddFor(m => m.Estado);
                 })
+                .OnEditorPreparing(@"(e) => onCellValueChanged(e)")
                 .DataSource(ds => ds.Mvc()
                     .Controller("Endereco")
                     .LoadAction("GetEndereco")
@@ -100,6 +101,7 @@ Html.DevExtreme().DataGrid<Crud.Models.Entities.Cliente>()
                     columns.AddFor(m => m.Cidade);
                     columns.AddFor(m => m.Estado);
                 })
+                .OnEditorPreparing(@"(e) => onCellValueChanged(e)")
                 .DataSource(ds => ds.Mvc()
                     .Controller("Endereco")
                     .LoadAction("GetEndereco")
@@ -135,6 +137,7 @@ Html.DevExtreme().DataGrid<Crud.Models.Entities.Cliente>()
                     columns.AddFor(m => m.Cidade);
                     columns.AddFor(m => m.Estado);
                 })
+                .OnEditorPreparing(@"(e) => onCellValueChanged(e)")
                 .DataSource(ds => ds.Mvc()
                     .Controller("Endereco")
                     .LoadAction("GetEndereco")
@@ -161,3 +164,48 @@ Html.DevExtreme().DataGrid<Crud.Models.Entities.Cliente>()
         margin-top: 2rem;
     }
 </style>
+
+<script>
+    function onCellValueChanged(e) {
+        const defaultValueChangeHandler = e.editorOptions.onValueChanged;
+        
+
+        if (e.parentType === "dataRow" && e.dataField === "Cep") {
+
+            e.editorOptions.onValueChanged = function (args) {
+                const cep = args.value;
+
+                if (/^\d{8}$/.test(cep)) {
+                    fetchViaCepApi(cep).then(endereco => {
+                        e.component.cellValue(e.row.rowIndex, "Logradouro", endereco.logradouro);
+                        e.component.cellValue(e.row.rowIndex, "Bairro", endereco.bairro);
+                        e.component.cellValue(e.row.rowIndex, "Cidade", endereco.cidade);
+                        e.component.cellValue(e.row.rowIndex, "Estado", endereco.estado);
+
+                        // e.component.refresh(true);
+                    });
+                }
+                defaultValueChangeHandler(args);
+            }
+        }
+    }
+
+
+
+    async function fetchViaCepApi(cep) {
+        const viaCepUrl = `https://viacep.com.br/ws/${cep}/json/`;
+        const response = await fetch(viaCepUrl);
+        const data = await response.json();
+
+        if (data.erro) {
+            alert("CEP não encontrado");
+        }
+        const endereco = {
+            logradouro: data.logradouro,
+            bairro: data.bairro,
+            cidade: data.localidade,
+            estado: data.estado
+        };
+        return endereco;
+    }
+</script>
